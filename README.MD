@@ -23,10 +23,10 @@ For the majority of titles, library location data is collected using ISBN 13 num
 To help ensure the library data returned was for the correct title, a function called check_for_metadata_match was implemented that compares the title, publisher, and author information contained within the metadata returned from the API. The results of the comparison are stored under the key "Match Check" under the record's unique identifier in worldcat_stats (see Inputs and Outputs section below). If the metadata from the API failed to match the record metadata, the record is added to a match_issues variable that is printed out at the end of the script. Inclusion in match_issues is only meant to flag possible issues with data collected, not to indicate a definitive failure.
 
 * Key functions and/or code blocks
-  - collect_libraries_for_identifiers
-  - collect_data_for_title
-  - check_for_metadata_match
-  - Lines 511-536 under Main Program
+  * collect_libraries_for_identifiers
+  * collect_data_for_title
+  * check_for_metadata_match
+  * Lines 511-536 under Main Program
 
 ## OCLC Numbers
 
@@ -101,13 +101,13 @@ Sample inputs and outputs are not provided, but each is described in detail belo
 
 Aside from the Web Services key needed to access the WorldCat Search API (see the Notes on Resources Used below), the following two documents are needed to successfully use the script. Users will need to place them within the inputs subdirectory and ensure they conform to the script's expectations and are saved in the correct file format.
 
-* neh_title_records.json
+#### neh_title_records.json
 
 The neh_title_records.json used for this project contains 372 metadata records that represent the in-progress work of the grant team on enriching the bibliographic and descriptive metadata for titles under consideration for the project. The JSON file was created using another script that transformed spreadsheet rows into Python dictionaries (with column header names serving as keys, and field contents serving as values).
 
 The keys from the records used by these scripts include "Title", "Subtitle", "Author 1 - Last", "Imprint", "HC ISBN", "PB ISBN", "EB ISBN", and "EB (OA) ISBN". Each dictionary that represents the data from a spreadsheet row about a particular title is matched with a key, a sequential number that serves as a unique identifier for that record. In the JSON document, the records are embedded within a larger dictionary that has one other key, "Last Updated", indicating when the document was created. The document is encoded in UTF-8, so special characters may be included in values used by the program.
 
-* tricky_titles.csv
+#### tricky_titles.csv
 
 The contents of the tricky_titles.csv file is discussed in detail above under Summary for gather_worldcat_stats.py. For the sake of simplicity and avoiding file format issues, this file should be saved as a plain .csv file without a specific encoding. Special characters typically handled by UTF-8 should be removed from this document.
 
@@ -115,27 +115,27 @@ The contents of the tricky_titles.csv file is discussed in detail above under Su
 
 These scripts produce two main output files, both of which will be saved to the outputs subdirectory.
 
-* worldcat_stats.json
+#### worldcat_stats.json
 
 This JSON document contains all of the data and metadata gathered for each title over the course of the execution of the gather_worldcat_stats.py script. For all titles except for eight records excluded as problematic, there is a key-value pair, with the key being identical to the key for that title in neh_title_records.json and the value being a dictionary containing all of the information gathered about that title. The document is encoded in UTF-8 to enable the representation of special characters taken from neh_title_records.json and returned from the WorldCat Search API.
 
 Each dictionary will have the following structure and keys:
 
-- "Identifier Type Used for Data Collection": This key will have a value of "ISBN", "OCLC", or "N/A", depending on whether and how library location data are gathered from the API.
+* "Identifier Type Used for Data Collection": This key will have a value of "ISBN", "OCLC", or "N/A", depending on whether and how library location data are gathered from the API.
 
-- "ISBNs Searched": This will be a list of all ISBNs included in calls to the API; even if the "Identifier Type Used for Data Collection" is "OCLC", there may be ISBNs listed here, as calls for ISBNs might have been made to the API that returned no results.
+* "ISBNs Searched": This will be a list of all ISBNs included in calls to the API; even if the "Identifier Type Used for Data Collection" is "OCLC", there may be ISBNs listed here, as calls for ISBNs might have been made to the API that returned no results.
 
-- "OCLC Lookup Matches": The value for this key will contain another dictionary, with information about the query used to look up records using the Bibliographic Resource service, whether FRBR Grouping was on or off, the number of records returned, and identifying metadata about records deemed to match, including OCLC numbers and title, publisher, author, and series information.
+* "OCLC Lookup Matches": The value for this key will contain another dictionary, with information about the query used to look up records using the Bibliographic Resource service, whether FRBR Grouping was on or off, the number of records returned, and identifying metadata about records deemed to match, including OCLC numbers and title, publisher, author, and series information.
 
-- "Library Locations - FRBR Grouping": The value for this key will either be true, false, or "N/A", with the latter occurring when no identifiers were found for a record.
+* "Library Locations - FRBR Grouping": The value for this key will either be true, false, or "N/A", with the latter occurring when no identifiers were found for a record.
 
-- "Response Metadata": The value for this key will include a list of dictionaries that contain the title-related metadata returned from each successful call to the API's Library Locations service. The basic metadata typically includes title, author, publisher, date, OCLC number, and ISBNs. In addition, the number of libraries associated with that particular record is included in each dictionary.
+* "Response Metadata": The value for this key will include a list of dictionaries that contain the title-related metadata returned from each successful call to the API's Library Locations service. The basic metadata typically includes title, author, publisher, date, OCLC number, and ISBNs. In addition, the number of libraries associated with that particular record is included in each dictionary.
 
-- "Match Check": When the ISBN method is used to gather data, the "Match Check" key will have further nested data as its value, stating the results of comparisons between the title, author, and publisher information contained in the neh_title_records.json record and the metadata listed under the "Response Metadata" key. The data will be in the form of a list, with the first element signaling whether the metadata from the API matches the record or not (true or false) and the second element being a dictionary that identifies where and what values failed to match. If the script did not use the ISBN method to gather data, the value for "Match Check" will simply be "N/A".
+* "Match Check": When the ISBN method is used to gather data, the "Match Check" key will have further nested data as its value, stating the results of comparisons between the title, author, and publisher information contained in the neh_title_records.json record and the metadata listed under the "Response Metadata" key. The data will be in the form of a list, with the first element signaling whether the metadata from the API matches the record or not (true or false) and the second element being a dictionary that identifies where and what values failed to match. If the script did not use the ISBN method to gather data, the value for "Match Check" will simply be "N/A".
 
-- "Complete Library Data": Nested underneath this key will be a list of dictionaries carrying information about the libraries that WorldCat identified as having the title in question in their holdings. Dictionaries for individual libraries will only appear once, as duplicates have been removed by the script before the list is assigned to this key.
+* "Complete Library Data": Nested underneath this key will be a list of dictionaries carrying information about the libraries that WorldCat identified as having the title in question in their holdings. Dictionaries for individual libraries will only appear once, as duplicates have been removed by the script before the list is assigned to this key.
 
-- "Data Summary": If library holdings were found, this key will include a dictionary containing the results of the analysis detailed under the Data Analysis section above. Keys of the dictionary will include "Number of Libraries", "Country Distribution", and "Region Distribution". If no results were found, the value for "Data Summary" will be simply "N/A".
+* "Data Summary": If library holdings were found, this key will include a dictionary containing the results of the analysis detailed under the Data Analysis section above. Keys of the dictionary will include "Number of Libraries", "Country Distribution", and "Region Distribution". If no results were found, the value for "Data Summary" will be simply "N/A".
 
 * worldcat_analysis_results.csv
 
