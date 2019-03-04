@@ -95,7 +95,7 @@ The script imports gather_worldcat_stats.py as a module in order to access data 
 
 ## Inputs and Outputs
 
-Sample inputs and outputs are not provided, but each is described in detail below.
+Sample inputs and outputs are not provided, but each is described in detail below. 'inputs' and 'outputs' subdirectories will also need to be created before attempting to run the script.
 
 ### Inputs
 
