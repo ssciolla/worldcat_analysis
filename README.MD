@@ -77,7 +77,7 @@ Over the course of the data gathering and analysis, some records were identified
   * Line 476 under Initializing Variables
   * Lines 504-5 under Main Program
 
-### Last Record Number ~
+### Last Record Number
 
 This script includes a variable called last_record_number to help control the data gathering process. While making new requests for data to the API, executing the program can take a significant amount of time. Thus, the last_record_number variable can be tweaked to instruct the script to only gather data up to a certain number of records. Then, the results can be checked to ensure that all aspects of the script are working as expected before continuing to gather data for remaining records.
 
